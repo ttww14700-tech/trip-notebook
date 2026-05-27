@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>旅行手札照片檢視器</title>
+    <link rel="stylesheet" href="./styles.css?v=travel-journal-5" />
+  </head>
+  <body>
+    <main class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div>
+            <h1>旅行手札照片檢視器</h1>
+            <p id="statusText">選擇一個資料夾，打開你的旅途相本</p>
+          </div>
+        </div>
+
+        <div class="controls">
+          <label class="pick-button">
+            <input id="folderInput" type="file" accept="image/*" webkitdirectory multiple />
+            選擇本機照片資料夾
+          </label>
+          <p class="privacy-note">僅供本機瀏覽，不會儲存或上傳任何檔案。</p>
+          <button id="styleToggleButton" class="mode-button" type="button" aria-pressed="false">旅行手札模式</button>
+          <select id="sortSelect" aria-label="排序">
+            <option value="name-asc">檔名 A-Z</option>
+            <option value="name-desc">檔名 Z-A</option>
+            <option value="date-desc">最新優先</option>
+            <option value="date-asc">最舊優先</option>
+          </select>
+        </div>
+
+        <div class="thumbs" id="thumbs" aria-label="照片縮圖"></div>
+      </aside>
+
+      <section class="viewer" aria-live="polite">
+        <div class="empty" id="emptyState">
+          <h2>把照片放進資料夾，再選擇該資料夾</h2>
+          <p>支援 JPG、PNG、GIF、WebP、BMP、AVIF。預設一般瀏覽，可切換旅行手札模式。</p>
+        </div>
+
+        <div class="album-cover is-hidden" id="albumCover">
+          <button class="cover-book" id="openAlbumButton" type="button">
+            <span class="cover-kicker">TRAVEL JOURNAL</span>
+            <strong id="albumTitle">旅途相本</strong>
+            <span id="albumSummary">0 張照片</span>
+            <span class="cover-collage" id="coverCollage" aria-hidden="true"></span>
+            <span class="cover-action">開始翻閱</span>
+          </button>
+        </div>
+
+        <div class="photo-stage is-hidden" id="photoStage">
+          <div class="toolbar">
+            <button id="prevButton" type="button" title="上一張">‹</button>
+            <div class="photo-meta">
+              <strong id="photoName"></strong>
+              <span id="photoCount"></span>
+            </div>
+            <button id="nextButton" type="button" title="下一張">›</button>
+          </div>
+          <div class="journal-page" id="journalPage">
+            <div class="journal-title" id="journalTitle">旅途相本</div>
+            <div class="date-tab" id="pageDate">旅途紀錄</div>
+            <figure class="photo-print">
+              <img id="mainPhoto" alt="選取的照片" />
+            </figure>
+            <div class="journal-file" id="journalFileName"></div>
+          </div>
+          <div class="bottom-bar">
+            <button id="fitButton" type="button">適合視窗</button>
+            <button id="actualButton" type="button">原始大小</button>
+            <button id="zoomButton" type="button">放大觀看</button>
+            <button id="fullscreenButton" type="button">全螢幕</button>
+            <div class="playback-controls" id="playbackControls">
+              <button id="playButton" type="button">播放</button>
+              <select id="speedSelect" aria-label="播放速度">
+                <option value="5000">5秒</option>
+                <option value="3000" selected>3秒</option>
+                <option value="1500">1.5秒</option>
+                <option value="800">0.8秒</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="lightbox is-hidden" id="lightbox" role="dialog" aria-modal="true" aria-label="放大觀看照片">
+      <button class="lightbox-close" id="closeLightboxButton" type="button" title="關閉">×</button>
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrevButton" type="button" title="上一張">‹</button>
+      <img id="lightboxPhoto" alt="放大的照片" />
+      <button class="lightbox-nav lightbox-next" id="lightboxNextButton" type="button" title="下一張">›</button>
+      <div class="lightbox-info" id="lightboxInfo">
+        <div>
+          <span>時間</span>
+          <strong id="photoTime">讀取中</strong>
+        </div>
+      </div>
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+
+    <script src="./app.js?v=travel-journal-5"></script>
+  </body>
+</html>

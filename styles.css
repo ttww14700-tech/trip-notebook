@@ -1,0 +1,1024 @@
+:root {
+  color-scheme: dark;
+  --bg: #17191b;
+  --panel: #22262a;
+  --panel-2: #2d3338;
+  --text: #f5f2ea;
+  --muted: #b8c0c7;
+  --accent: #58c4b8;
+  --accent-2: #f2b84b;
+  --paper: #f3ecd9;
+  --paper-ink: #273034;
+  --stamp: #bb5f45;
+  --danger: #ee6c6c;
+  --line: rgba(255, 255, 255, 0.12);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Noto Sans TC", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+  border-right: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.brand {
+  padding: 22px 18px 14px;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.brand p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.controls {
+  display: grid;
+  gap: 9px;
+  padding: 0 18px 16px;
+}
+
+.pick-button,
+input,
+select,
+button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.pick-button {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  background: var(--accent);
+  color: #09201d;
+  font-weight: 750;
+}
+
+.privacy-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.pick-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0 12px;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+button:focus-visible,
+.pick-button:focus-within {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(242, 184, 75, 0.18);
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 14px 16px;
+}
+
+.thumb-chapter {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 2px 4px;
+  background: var(--panel);
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background: #111;
+}
+
+.thumb.is-active {
+  border-color: var(--accent-2);
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb span {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  overflow: hidden;
+  padding: 3px 5px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.68);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viewer {
+  display: grid;
+  min-width: 0;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 20% 12%, rgba(88, 196, 184, 0.11), transparent 28%),
+    #111315;
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+.empty {
+  align-self: center;
+  justify-self: center;
+  max-width: 520px;
+  padding: 24px;
+  text-align: center;
+}
+
+.empty h2 {
+  font-size: 28px;
+  line-height: 1.25;
+}
+
+.empty p {
+  margin-top: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.photo-stage {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.album-cover {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  align-self: stretch;
+  min-width: 0;
+  min-height: 0;
+  height: 100vh;
+  overflow: hidden;
+  padding: 42px;
+}
+
+.album-cover.is-hidden {
+  display: none;
+}
+
+.cover-book {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  gap: 12px;
+  width: min(560px, 88vw);
+  height: min(720px, calc(100vh - 84px));
+  min-height: 0;
+  padding: 34px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.2), transparent 18%),
+    linear-gradient(145deg, #31454a, #733f3b 58%, #2d3338);
+  color: var(--text);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.38);
+  text-align: left;
+}
+
+.cover-book::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 42px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.cover-kicker,
+.cover-action {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cover-kicker {
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.cover-book strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: 1.05;
+}
+
+.cover-book > span:not(.cover-collage):not(.cover-kicker):not(.cover-action) {
+  color: rgba(245, 242, 234, 0.8);
+}
+
+.cover-collage {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 10px;
+  min-height: 280px;
+  margin-top: 18px;
+}
+
+.cover-collage img {
+  width: 100%;
+  height: 100%;
+  min-height: 128px;
+  border: 8px solid rgba(245, 242, 234, 0.92);
+  border-bottom-width: 24px;
+  object-fit: cover;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
+}
+
+.cover-collage img:nth-child(1) {
+  transform: rotate(-2deg);
+}
+
+.cover-collage img:nth-child(2) {
+  transform: rotate(1.5deg);
+}
+
+.cover-collage img:nth-child(3) {
+  transform: rotate(1deg);
+}
+
+.cover-collage img:nth-child(4) {
+  transform: rotate(-1.5deg);
+}
+
+.cover-action {
+  justify-self: start;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.is-hidden {
+  display: none;
+}
+
+.toolbar,
+.bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(23, 25, 27, 0.74);
+  backdrop-filter: blur(14px);
+}
+
+.toolbar {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.bottom-bar {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  z-index: 6;
+  gap: 6px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.photo-meta {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  max-width: min(620px, calc(100% - 180px));
+  min-width: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(17, 19, 21, 0.72);
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.photo-meta strong,
+.photo-meta span {
+  display: block;
+}
+
+.photo-meta strong {
+  overflow: hidden;
+  max-width: 100%;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-meta span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+button {
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+.toolbar button {
+  pointer-events: auto;
+  width: 42px;
+  height: 54px;
+  padding: 0;
+  border-radius: 8px;
+  background: rgba(45, 51, 56, 0.78);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.bottom-bar button {
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+#mainPhoto {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 116px);
+  cursor: zoom-in;
+  object-fit: contain;
+}
+
+#mainPhoto.actual-size {
+  max-width: none;
+  max-height: none;
+}
+
+.journal-page {
+  position: relative;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  min-width: 0;
+  min-height: 0;
+  height: calc(100vh - 32px);
+  margin: 16px;
+  padding: 48px 54px 72px;
+  overflow: auto;
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(39, 48, 52, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(39, 48, 52, 0.06) 1px, transparent 1px),
+    var(--paper);
+  background-size: 32px 32px;
+  box-shadow: inset 0 0 0 1px rgba(39, 48, 52, 0.12), 0 20px 46px rgba(0, 0, 0, 0.32);
+}
+
+.journal-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 42px;
+  width: 2px;
+  background: rgba(187, 95, 69, 0.35);
+}
+
+.journal-page.turning .photo-print {
+  animation: pageIn 260ms ease-out;
+}
+
+.date-tab {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  z-index: 1;
+  padding: 8px 12px;
+  border: 1px solid rgba(187, 95, 69, 0.32);
+  border-radius: 4px;
+  color: var(--stamp);
+  font-size: 14px;
+  font-weight: 850;
+  transform: rotate(1deg);
+}
+
+.journal-title {
+  display: none;
+}
+
+.journal-file {
+  display: none;
+}
+
+.photo-print {
+  position: relative;
+  margin: 0;
+  padding: 14px 14px 42px;
+  border-radius: 3px;
+  background: #fffaf0;
+  box-shadow: 0 18px 36px rgba(39, 48, 52, 0.26);
+}
+
+.photo-print::before,
+.photo-print::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  width: 82px;
+  height: 24px;
+  border-radius: 3px;
+  background: rgba(242, 184, 75, 0.42);
+}
+
+.photo-print::before {
+  left: 24px;
+  transform: rotate(-8deg);
+}
+
+.photo-print::after {
+  right: 24px;
+  transform: rotate(7deg);
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px) rotate(0.6deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 340px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) 72px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 28px 24px 18px;
+  background: rgba(6, 8, 9, 0.94);
+}
+
+.lightbox.is-hidden {
+  display: none;
+}
+
+.lightbox img {
+  grid-column: 2;
+  grid-row: 1;
+  max-width: 100%;
+  max-height: calc(100vh - 96px);
+  object-fit: contain;
+}
+
+.lightbox-close,
+.lightbox-nav {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.lightbox-nav {
+  width: 54px;
+  height: 68px;
+  padding: 0;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.lightbox-prev {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.lightbox-next {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.lightbox-caption {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  max-width: min(840px, 92vw);
+  overflow: hidden;
+  color: var(--muted);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lightbox-info {
+  position: absolute;
+  right: 18px;
+  bottom: 54px;
+  display: grid;
+  gap: 10px;
+  width: min(320px, calc(100% - 36px));
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(16, 18, 19, 0.78);
+  backdrop-filter: blur(12px);
+}
+
+.lightbox-info div {
+  min-width: 0;
+}
+
+.lightbox-info span,
+.lightbox-info strong {
+  display: block;
+}
+
+.lightbox-info span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.lightbox-info strong {
+  overflow-wrap: anywhere;
+  margin-top: 3px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+@media (max-width: 800px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .thumbs {
+    grid-auto-flow: column;
+    grid-auto-columns: 82px;
+    grid-template-columns: none;
+    padding-bottom: 12px;
+  }
+
+  .viewer,
+  .photo-stage,
+  .album-cover {
+    height: calc(100vh - 260px);
+    min-height: 0;
+  }
+
+  #mainPhoto {
+    max-height: calc(100vh - 390px);
+  }
+
+  .album-cover {
+    padding: 18px;
+  }
+
+  .cover-book {
+    width: 100%;
+    height: min(480px, calc(100vh - 296px));
+    min-height: 0;
+    padding: 24px;
+  }
+
+  .cover-collage {
+    min-height: 190px;
+  }
+
+  .journal-page {
+    margin: 12px;
+    height: calc(100vh - 284px);
+    padding: 52px 18px 56px;
+  }
+
+  .toolbar {
+    padding: 0 8px;
+  }
+
+  .photo-meta {
+    top: 10px;
+    max-width: calc(100% - 120px);
+    padding: 6px 10px;
+  }
+
+  .bottom-bar {
+    right: 10px;
+    bottom: 10px;
+    max-width: calc(100% - 20px);
+    overflow-x: auto;
+  }
+
+  .bottom-bar button {
+    white-space: nowrap;
+  }
+
+  .journal-page::before {
+    left: 18px;
+  }
+
+  .date-tab {
+    top: 12px;
+    right: 12px;
+    font-size: 12px;
+  }
+
+  .photo-print {
+    padding: 10px 10px 34px;
+  }
+
+  .lightbox {
+    top: 260px;
+    left: 0;
+    grid-template-columns: 52px minmax(0, 1fr) 52px;
+    padding: 70px 10px 16px;
+  }
+
+  .lightbox img {
+    max-height: calc(100vh - 126px);
+  }
+
+  .lightbox-nav {
+    width: 44px;
+    height: 58px;
+  }
+
+  .lightbox-info {
+    right: 10px;
+    bottom: 48px;
+  }
+}
+
+.mode-button {
+  background: var(--panel-2);
+  color: var(--text);
+  font-weight: 750;
+}
+
+.mode-button.is-active {
+  border-color: var(--accent-2);
+  background: #3f4b4d;
+  color: var(--accent-2);
+}
+
+.thumbs {
+  grid-template-columns: 1fr;
+}
+
+.thumb-chapter {
+  padding: 12px 4px 5px;
+}
+
+.thumb {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  aspect-ratio: auto;
+  min-height: 76px;
+  padding: 6px;
+  text-align: left;
+}
+
+.thumb img {
+  width: 82px;
+  height: 64px;
+  border-radius: 5px;
+}
+
+.thumb span {
+  position: static;
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.playback-controls {
+  display: none;
+  gap: 6px;
+  align-items: center;
+}
+
+body.journal-mode .playback-controls {
+  display: flex;
+}
+
+.playback-controls select {
+  width: auto;
+  min-height: 34px;
+  padding: 0 8px;
+  font-size: 13px;
+}
+
+body:not(.journal-mode) .viewer {
+  background: #111315;
+}
+
+body:not(.journal-mode) .journal-page {
+  height: 100vh;
+  margin: 0;
+  padding: 74px 72px 78px;
+  overflow: hidden;
+  border-radius: 0;
+  background: #111315;
+  box-shadow: none;
+}
+
+body:not(.journal-mode) .journal-page::before,
+body:not(.journal-mode) .photo-print::before,
+body:not(.journal-mode) .photo-print::after,
+body:not(.journal-mode) .date-tab {
+  display: none;
+}
+
+body:not(.journal-mode) .photo-print {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body:not(.journal-mode) #mainPhoto {
+  max-height: calc(100vh - 154px);
+}
+
+body.journal-mode .viewer {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 20% 12%, rgba(88, 196, 184, 0.11), transparent 28%),
+    #111315;
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+body.journal-mode .journal-page {
+  height: calc(100vh - 32px);
+  margin: 16px;
+  padding: 48px 54px 72px;
+  overflow: auto;
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(39, 48, 52, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(39, 48, 52, 0.06) 1px, transparent 1px),
+    var(--paper);
+  background-size: 32px 32px;
+  box-shadow: inset 0 0 0 1px rgba(39, 48, 52, 0.12), 0 20px 46px rgba(0, 0, 0, 0.32);
+}
+
+body.journal-mode .photo-meta {
+  top: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
+}
+
+body.journal-mode .photo-meta strong {
+  display: none;
+}
+
+body.journal-mode .photo-meta span {
+  margin: 0;
+  color: var(--paper);
+  font-size: 16px;
+  font-weight: 850;
+  letter-spacing: 0.03em;
+}
+
+body.journal-mode .photo-meta span::before {
+  content: "page ";
+  color: var(--accent-2);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+body.journal-mode .journal-title {
+  position: absolute;
+  top: 20px;
+  left: 76px;
+  z-index: 2;
+  display: block;
+  max-width: min(520px, 56vw);
+  overflow: hidden;
+  color: var(--stamp);
+  font-size: clamp(28px, 3.4vw, 48px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-shadow: 0 2px 0 rgba(255, 250, 240, 0.7);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.journal-mode .journal-file {
+  position: absolute;
+  bottom: 22px;
+  left: 76px;
+  z-index: 2;
+  display: block;
+  max-width: min(520px, 52vw);
+  overflow: hidden;
+  color: rgba(39, 48, 52, 0.62);
+  font-size: 12px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.journal-mode .journal-page::before {
+  display: block;
+}
+
+body.journal-mode .photo-print {
+  padding: 14px 14px 42px;
+  background: #fffaf0;
+  box-shadow: 0 18px 36px rgba(39, 48, 52, 0.26);
+}
+
+body.journal-mode .photo-print::before,
+body.journal-mode .photo-print::after,
+body.journal-mode .date-tab {
+  display: block;
+}
+
+body.journal-mode #mainPhoto {
+  max-height: calc(100vh - 116px);
+}
+
+@media (max-width: 800px) {
+  .thumb {
+    grid-template-columns: 72px minmax(0, 1fr);
+    min-height: 68px;
+  }
+
+  .thumbs {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+  }
+
+  .thumb img {
+    width: 72px;
+    height: 56px;
+  }
+
+  body:not(.journal-mode) .journal-page {
+    height: calc(100vh - 260px);
+    padding: 62px 14px 66px;
+  }
+
+  body:not(.journal-mode) #mainPhoto {
+    max-height: calc(100vh - 388px);
+  }
+
+  body.journal-mode .journal-page {
+    height: calc(100vh - 284px);
+    margin: 12px;
+    padding: 52px 18px 56px;
+  }
+
+  body.journal-mode .journal-title {
+    left: 32px;
+    max-width: 48vw;
+    font-size: 22px;
+  }
+
+  body.journal-mode .journal-file {
+    left: 32px;
+    bottom: 16px;
+    max-width: 58vw;
+  }
+
+  body.journal-mode .photo-meta span {
+    font-size: 14px;
+  }
+}
