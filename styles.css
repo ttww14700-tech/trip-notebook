@@ -670,25 +670,71 @@ button {
 @media (max-width: 800px) {
   .app {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: 238px minmax(0, 1fr);
   }
 
   .sidebar {
+    height: 238px;
+    min-height: 0;
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
 
+  .brand {
+    padding: 12px 14px 8px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .brand p {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    padding: 0 12px 8px;
+  }
+
+  .pick-button,
+  .mode-button,
+  .controls select {
+    min-height: 36px;
+    font-size: 13px;
+  }
+
+  .privacy-note {
+    grid-column: 1 / -1;
+    font-size: 11px;
+  }
+
   .thumbs {
     grid-auto-flow: column;
-    grid-auto-columns: 82px;
+    grid-auto-columns: 112px;
     grid-template-columns: none;
-    padding-bottom: 12px;
+    gap: 8px;
+    padding: 0 12px 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .thumb-chapter {
+    position: static;
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    width: 70px;
+    padding: 6px;
+    writing-mode: vertical-rl;
   }
 
   .viewer,
   .photo-stage,
   .album-cover {
-    height: calc(100vh - 260px);
+    height: calc(100vh - 238px);
     min-height: 0;
   }
 
@@ -702,7 +748,7 @@ button {
 
   .cover-book {
     width: 100%;
-    height: min(480px, calc(100vh - 296px));
+    height: min(480px, calc(100vh - 274px));
     min-height: 0;
     padding: 24px;
   }
@@ -753,7 +799,7 @@ button {
   }
 
   .lightbox {
-    top: 260px;
+    top: 238px;
     left: 0;
     grid-template-columns: 52px minmax(0, 1fr) 52px;
     padding: 70px 10px 16px;
@@ -982,8 +1028,8 @@ body.journal-mode #mainPhoto {
   }
 
   .thumbs {
-    grid-auto-flow: row;
-    grid-auto-columns: auto;
+    grid-auto-flow: column;
+    grid-auto-columns: 112px;
   }
 
   .thumb img {
@@ -992,16 +1038,16 @@ body.journal-mode #mainPhoto {
   }
 
   body:not(.journal-mode) .journal-page {
-    height: calc(100vh - 260px);
+    height: calc(100vh - 238px);
     padding: 62px 14px 66px;
   }
 
   body:not(.journal-mode) #mainPhoto {
-    max-height: calc(100vh - 388px);
+    max-height: calc(100vh - 366px);
   }
 
   body.journal-mode .journal-page {
-    height: calc(100vh - 284px);
+    height: calc(100vh - 262px);
     margin: 12px;
     padding: 52px 18px 56px;
   }
