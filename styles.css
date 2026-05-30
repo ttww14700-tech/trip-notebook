@@ -1145,9 +1145,7 @@ body.journal-mode #mainPhoto {
   }
 
   .thumb-chapter {
-    width: 46px;
-    padding: 4px;
-    font-size: 11px;
+    display: none;
   }
 
   .viewer,
