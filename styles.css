@@ -148,6 +148,8 @@ button:focus-visible,
   position: sticky;
   top: 0;
   z-index: 1;
+  display: flex;
+  gap: 0.2em;
   padding: 8px 2px 4px;
   background: var(--panel);
   color: var(--accent-2);
@@ -728,7 +730,11 @@ button {
     place-items: center;
     width: 70px;
     padding: 6px;
-    writing-mode: vertical-rl;
+    gap: 2px;
+  }
+
+  .thumb-chapter span {
+    display: block;
   }
 
   .viewer,
@@ -828,8 +834,8 @@ button {
 
 .mode-button.is-active {
   border-color: var(--accent-2);
-  background: #3f4b4d;
-  color: var(--accent-2);
+  background: var(--paper);
+  color: var(--paper-ink);
 }
 
 .thumbs {
@@ -1077,11 +1083,11 @@ body.journal-mode #mainPhoto {
 
 @media (max-width: 800px) {
   .app {
-    grid-template-rows: 198px minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .sidebar {
-    height: 198px;
+    height: auto;
   }
 
   .brand {
@@ -1118,6 +1124,10 @@ body.journal-mode #mainPhoto {
     padding: 0 10px 8px;
   }
 
+  .thumbs:empty {
+    display: none;
+  }
+
   .thumb {
     grid-template-columns: 1fr;
     gap: 0;
@@ -1143,7 +1153,43 @@ body.journal-mode #mainPhoto {
   .viewer,
   .photo-stage,
   .album-cover {
-    height: calc(100dvh - 198px);
+    height: 100%;
+  }
+
+  .album-cover {
+    align-items: stretch;
+    padding: 8px;
+  }
+
+  .cover-book {
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    height: 100%;
+    max-height: 100%;
+    padding: 18px;
+    gap: 8px;
+  }
+
+  .cover-book strong {
+    font-size: 34px;
+  }
+
+  .cover-collage {
+    min-height: 0;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+
+  .cover-collage img {
+    min-height: 0;
+    border-width: 6px;
+    border-bottom-width: 16px;
+  }
+
+  .cover-action {
+    position: relative;
+    z-index: 1;
+    margin-top: 2px;
+    background: rgba(245, 242, 234, 0.18);
   }
 
   body:not(.journal-mode) .journal-page {

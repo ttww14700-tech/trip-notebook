@@ -12,14 +12,14 @@
         <div class="brand">
           <div>
             <h1>旅行手札照片檢視器</h1>
-            <p id="statusText">選擇一個資料夾，打開你的旅途相本</p>
+            <p id="statusText">選擇照片，打開你的旅途相本</p>
           </div>
         </div>
 
         <div class="controls">
           <label class="pick-button">
-            <input id="folderInput" type="file" accept="image/*" webkitdirectory multiple />
-            選擇本機照片資料夾
+            <input id="folderInput" type="file" accept="image/*" multiple />
+            選擇本機照片
           </label>
           <p class="privacy-note">僅供本機瀏覽，不會儲存或上傳任何檔案。</p>
           <button id="styleToggleButton" class="mode-button" type="button" aria-pressed="false">旅行手札模式</button>
@@ -36,7 +36,7 @@
 
       <section class="viewer" aria-live="polite">
         <div class="empty" id="emptyState">
-          <h2>把照片放進資料夾，再選擇該資料夾</h2>
+          <h2>選擇要檢視的照片</h2>
           <p>支援 JPG、PNG、GIF、WebP、BMP、AVIF。預設一般瀏覽，可切換旅行手札模式。</p>
         </div>
 

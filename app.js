@@ -34,6 +34,7 @@ const lightboxPrevButton = document.querySelector("#lightboxPrevButton");
 const lightboxNextButton = document.querySelector("#lightboxNextButton");
 
 const imageTypes = new Set(["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/avif"]);
+const maxSelectedPhotos = 500;
 
 let photos = [];
 let filteredPhotos = [];
@@ -42,7 +43,12 @@ let objectUrl = "";
 let currentFolderName = "旅途相本";
 let isJournalMode = false;
 let autoplayTimer = 0;
+let thumbObserver = null;
+let thumbnailLoadFrame = 0;
+let manualThumbListenersReady = false;
 const metadataCache = new Map();
+const thumbnailUrls = new Map();
+const pendingThumbnails = new Set();
 
 function fileLabel(file) {
   return file.webkitRelativePath || file.name;
@@ -68,14 +74,14 @@ function sortPhotos(items) {
 function refreshList() {
   filteredPhotos = sortPhotos(photos);
 
-  thumbs.replaceChildren();
+  resetThumbnails();
   let lastChapter = "";
   filteredPhotos.forEach((file, index) => {
     const chapter = formatFileDate(file.lastModified) || "未標日期";
     if (chapter !== lastChapter) {
       const heading = document.createElement("div");
       heading.className = "thumb-chapter";
-      heading.textContent = chapter;
+      heading.append(...createChapterParts(chapter));
       thumbs.append(heading);
       lastChapter = chapter;
     }
@@ -83,7 +89,6 @@ function refreshList() {
     const button = document.createElement("button");
     const img = document.createElement("img");
     const caption = document.createElement("span");
-    const url = URL.createObjectURL(file);
 
     button.className = "thumb";
     button.type = "button";
@@ -91,18 +96,19 @@ function refreshList() {
     button.dataset.index = String(index);
     button.addEventListener("click", () => showPhoto(index));
 
-    img.src = url;
     img.alt = file.name;
+    img.dataset.index = String(index);
     img.loading = "lazy";
-    img.addEventListener("load", () => URL.revokeObjectURL(url), { once: true });
+    img.decoding = "async";
 
     caption.textContent = file.name;
     button.append(img, caption);
     thumbs.append(button);
+    observeThumbnail(img);
   });
 
   if (filteredPhotos.length === 0) {
-    showEmpty(photos.length ? "沒有符合搜尋的照片" : "這個資料夾裡沒有可檢視的照片");
+    showEmpty(photos.length ? "沒有符合搜尋的照片" : "沒有可檢視的照片");
     return;
   }
 
@@ -112,6 +118,129 @@ function refreshList() {
   } else {
     showPhoto(Math.min(activeIndex, filteredPhotos.length - 1));
   }
+}
+
+function createChapterParts(chapter) {
+  const match = chapter.match(/^(\d{4}年)(\d{2}月)(\d{2}日)$/);
+  if (!match) return [document.createTextNode(chapter)];
+
+  return match.slice(1).map((part) => {
+    const span = document.createElement("span");
+    span.textContent = part;
+    return span;
+  });
+}
+
+function resetThumbnails() {
+  if (thumbObserver) thumbObserver.disconnect();
+  if (thumbnailLoadFrame) {
+    window.cancelAnimationFrame(thumbnailLoadFrame);
+    thumbnailLoadFrame = 0;
+  }
+
+  pendingThumbnails.clear();
+  thumbs.querySelectorAll("img").forEach(releaseThumbnailUrl);
+  thumbs.replaceChildren();
+}
+
+function observeThumbnail(img) {
+  const observer = getThumbObserver();
+  if (observer) {
+    observer.observe(img);
+    return;
+  }
+
+  pendingThumbnails.add(img);
+  setupManualThumbnailLoading();
+  queueThumbnailLoadCheck();
+}
+
+function getThumbObserver() {
+  if (!("IntersectionObserver" in window)) return null;
+  if (thumbObserver) return thumbObserver;
+
+  thumbObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        thumbObserver.unobserve(entry.target);
+        loadThumbnail(entry.target);
+      });
+    },
+    {
+      root: thumbs,
+      rootMargin: "260px",
+    },
+  );
+
+  return thumbObserver;
+}
+
+function loadThumbnail(img) {
+  if (img.src) return;
+
+  const file = filteredPhotos[Number(img.dataset.index)];
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+  thumbnailUrls.set(img, url);
+  img.src = url;
+  img.addEventListener("load", () => releaseThumbnailUrl(img), { once: true });
+  img.addEventListener("error", () => releaseThumbnailUrl(img), { once: true });
+}
+
+function setupManualThumbnailLoading() {
+  if (manualThumbListenersReady) return;
+
+  manualThumbListenersReady = true;
+  thumbs.addEventListener("scroll", queueThumbnailLoadCheck, { passive: true });
+  window.addEventListener("resize", queueThumbnailLoadCheck);
+}
+
+function queueThumbnailLoadCheck() {
+  if (thumbnailLoadFrame) return;
+
+  thumbnailLoadFrame = window.requestAnimationFrame(() => {
+    thumbnailLoadFrame = 0;
+    loadVisibleThumbnails();
+  });
+}
+
+function loadVisibleThumbnails() {
+  if (!pendingThumbnails.size) return;
+
+  pendingThumbnails.forEach((img) => {
+    if (!img.isConnected) {
+      pendingThumbnails.delete(img);
+      return;
+    }
+
+    if (!isThumbnailNearView(img)) return;
+
+    pendingThumbnails.delete(img);
+    loadThumbnail(img);
+  });
+}
+
+function isThumbnailNearView(img) {
+  const margin = 260;
+  const imgRect = img.getBoundingClientRect();
+  const rootRect = thumbs.getBoundingClientRect();
+
+  return (
+    imgRect.right >= rootRect.left - margin &&
+    imgRect.left <= rootRect.right + margin &&
+    imgRect.bottom >= rootRect.top - margin &&
+    imgRect.top <= rootRect.bottom + margin
+  );
+}
+
+function releaseThumbnailUrl(img) {
+  const url = thumbnailUrls.get(img);
+  if (!url) return;
+
+  URL.revokeObjectURL(url);
+  thumbnailUrls.delete(img);
 }
 
 function showEmpty(message) {
@@ -147,7 +276,9 @@ function updateAlbumCover() {
 
     image.src = url;
     image.alt = "";
+    image.decoding = "async";
     image.addEventListener("load", () => URL.revokeObjectURL(url), { once: true });
+    image.addEventListener("error", () => URL.revokeObjectURL(url), { once: true });
     coverCollage.append(image);
   });
 }
@@ -188,12 +319,22 @@ function showPhoto(index) {
   });
 }
 
+function clearCurrentPhoto() {
+  if (objectUrl) {
+    URL.revokeObjectURL(objectUrl);
+    objectUrl = "";
+  }
+
+  mainPhoto.removeAttribute("src");
+  lightboxPhoto.removeAttribute("src");
+}
+
 function setJournalMode(enabled) {
   isJournalMode = enabled;
   document.body.classList.toggle("journal-mode", isJournalMode);
   styleToggleButton.setAttribute("aria-pressed", String(isJournalMode));
   styleToggleButton.classList.toggle("is-active", isJournalMode);
-  styleToggleButton.textContent = isJournalMode ? "關閉旅行手札" : "旅行手札模式";
+  styleToggleButton.textContent = isJournalMode ? "旅行手札模式啟動狀態" : "旅行手札模式";
 
   if (!filteredPhotos.length) return;
 
@@ -401,11 +542,16 @@ function readRational(view, offset, littleEndian) {
 
 folderInput.addEventListener("change", () => {
   stopAutoplay();
-  photos = [...folderInput.files].filter((file) => imageTypes.has(file.type) || file.name.match(/\.(jpe?g|png|gif|webp|bmp|avif)$/i));
+  clearCurrentPhoto();
+  const selectedPhotos = [...folderInput.files].filter((file) => imageTypes.has(file.type) || file.name.match(/\.(jpe?g|png|gif|webp|bmp|avif)$/i));
+  photos = selectedPhotos.slice(0, maxSelectedPhotos);
   activeIndex = 0;
   const firstPath = photos[0]?.webkitRelativePath || "";
   currentFolderName = firstPath.split("/")[0] || "旅途相本";
   refreshList();
+  if (selectedPhotos.length > maxSelectedPhotos) {
+    statusText.textContent = `先載入前 ${maxSelectedPhotos} 張照片，避免瀏覽器過載`;
+  }
 });
 
 sortSelect.addEventListener("change", () => {
